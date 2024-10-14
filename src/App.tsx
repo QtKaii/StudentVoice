@@ -8,7 +8,10 @@ import CallToAction from './components/CallToAction/CallToAction'
 import Footer from './components/Footer/Footer'
 import SignUp from './components/SignUp/SignUp'
 import Login from './components/Login/Login'
+import Logout from './components/Logout/Logout'
+import ProtectedRoute from './components/ProtectedRoute'
 import { ThemeProvider } from './context/ThemeContext'
+import { AuthProvider } from './context/AuthContext'
 import { useTheme } from './context/ThemeContext'
 
 function AppContent() {
@@ -30,6 +33,12 @@ function AppContent() {
             } />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route element={<ProtectedRoute />}>
+              {/* Add protected routes here */}
+              {/* For example: */}
+              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+            </Route>
           </Routes>
         </div>
         <Footer />
@@ -41,7 +50,9 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
