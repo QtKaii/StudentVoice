@@ -10,6 +10,11 @@ const __dirname = path.dirname(__filename);
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../.env.development') });
 
+// Check if JWT_SECRET_KEY is set
+if (!process.env.JWT_SECRET_KEY) {
+    throw new Error("JWT_SECRET_KEY is not set in environment variables");
+}
+
 const app = express();
 app.use(express.json());
 

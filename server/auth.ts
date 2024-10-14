@@ -4,10 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { z } from "zod";
 
 const db = new Surreal();
-const secretKey = process.env.JWT_SECRET_KEY;
-if (!secretKey) {
-    throw new Error("JWT_SECRET_KEY is not set in environment variables");
-}
 
 // Initialize the database connection with retry mechanism and detailed logging
 export async function initDB(maxRetries = 5, retryDelay = 5000) {
@@ -99,7 +95,7 @@ export async function login(email: string, password: string): Promise<{ success:
         const user = users[0][0];
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (isValidPassword && user.id) {
-            const token = jwt.sign({ userId: user.id }, secretKey as string, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
             return { success: true, message: 'Login successful', token };
         } else {
             return { success: false, message: 'Invalid credentials' };
@@ -112,7 +108,7 @@ export async function login(email: string, password: string): Promise<{ success:
 
 export function verifyToken(token: string): { userId: string } | null {
     try {
-        const decoded = jwt.verify(token, secretKey as string) as JwtPayload;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload;
         if (decoded && decoded.userId) {
             return { userId: decoded.userId };
         }
