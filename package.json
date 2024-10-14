@@ -4,8 +4,11 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+        "dev:frontend": "vite",
+        "dev:backend": "cd server && npm run dev",
+        "build": "vite build && cd server && npm run build",
+        "start": "cd server && npm run start",
         "lint": "eslint .",
         "preview": "vite preview"
     },
@@ -14,26 +17,37 @@
         "@types/bcryptjs": "^2.4.6",
         "@types/jsonwebtoken": "^9.0.7",
         "aws-sdk": "^2.1691.0",
+        "axios": "^1.7.7",
         "bcryptjs": "^2.4.3",
-        "framer-motion": "^10.12.4",
+        "dotenv": "^16.4.5",
+        "framer-motion": "^11.11.8",
         "jsonwebtoken": "^9.0.2",
-        "lucide-react": "^0.344.0",
+        "lucide-react": "^0.452.0",
         "mock-aws-s3": "^4.0.2",
         "nock": "^13.5.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.26.2",
-        "surrealdb": "^1.0.6"
+        "surrealdb": "^1.0.6",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.7.5",
         "@types/react": "^18.0.28",
         "@types/react-dom": "^18.0.11",
         "@vitejs/plugin-react": "^4.0.0",
         "autoprefixer": "^10.4.14",
+        "concurrently": "^8.0.1",
         "postcss": "^8.4.23",
         "tailwindcss": "^3.3.2",
+        "ts-node": "^10.9.2",
+        "ts-node-dev": "^2.0.0",
         "typescript": "^5.0.2",
         "vite": "^4.3.2"
-    }
+    },
+    "workspaces": [
+        "server"
+    ]
 }

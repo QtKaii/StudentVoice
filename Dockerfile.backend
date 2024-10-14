@@ -1,0 +1,26 @@
+# Use an official Node runtime as the parent image
+FROM node:18
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY server/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Install TypeScript globally
+RUN npm install -g typescript
+
+# Copy the server directory contents into the container at /app
+COPY server ./
+
+# Compile TypeScript to JavaScript
+RUN tsc
+
+# Make port 3001 available to the world outside this container
+EXPOSE 3001
+
+# Run the compiled app when the container launches
+CMD ["node", "dist/index.js"]

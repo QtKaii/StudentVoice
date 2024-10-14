@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
 import { useTheme } from './context/ThemeContext'
+import Dashboard from './components/Dashboard/Dashboard'
 
 function AppContent() {
   const { darkMode } = useTheme();
@@ -35,9 +36,7 @@ function AppContent() {
             <Route path="/signin" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route element={<ProtectedRoute />}>
-              {/* Add protected routes here */}
-              {/* For example: */}
-              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Routes>
         </div>
