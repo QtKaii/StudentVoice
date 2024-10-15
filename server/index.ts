@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../.env.development') });
+dotenv.config();
 
 // Check if JWT_SECRET_KEY is set
 if (!process.env.JWT_SECRET_KEY) {
@@ -36,22 +36,27 @@ declare global {
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
+    console.log("Authenticating token:", token); // Added debug log
 
     if (token == null) {
+        console.log("No token provided"); // Added debug log
         res.sendStatus(401);
         return;
     }
 
     const user = verifyToken(token);
     if (user == null) {
+        console.log("Invalid token"); // Added debug log
         res.sendStatus(403);
         return;
     }
 
     req.user = user;
+    console.log("Authentication successful:", user); // Added debug log
     next();
 };
 
+// API routes should be defined BEFORE the static file serving middleware
 app.post('/api/signup', async (req: Request, res: Response) => {
     try {
         const user = req.body;
@@ -78,6 +83,7 @@ app.get('/api/verify-token', authenticateToken, (req: Request, res: Response) =>
     res.json({ authenticated: true, userId: req.user?.userId });
 });
 
+
 // Updated endpoint for fetching user data
 app.get('/api/user-data', authenticateToken, async (req: Request, res: Response): Promise<void> => {
     try {
@@ -97,9 +103,13 @@ app.get('/api/user-data', authenticateToken, async (req: Request, res: Response)
     }
 });
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req: Request, res: Response) => {
+// Serve index.html only for GET requests to the root path.  This should be AFTER the API routes.
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+//This should be last
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

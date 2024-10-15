@@ -31,8 +31,8 @@ const SignUp: React.FC = () => {
       const result = await signup({ username, email, password });
       if (result.success) {
         setSuccess(result.message);
-        // Redirect to login page after successful registration
-        setTimeout(() => navigate('/login'), 1500);
+        // Redirect to signin page after successful registration
+        navigate('/signin');
       } else {
         setError(result.message);
       }
@@ -58,8 +58,8 @@ const SignUp: React.FC = () => {
           </p>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
           {success && <p className="mt-2 text-center text-sm text-green-600">{success}</p>}
-          <motion.form 
-            className="mt-8 space-y-6" 
+          <motion.form
+            className="mt-8 space-y-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}

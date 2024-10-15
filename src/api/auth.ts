@@ -12,6 +12,7 @@ interface AuthResponse {
     success: boolean;
     message: string;
     token?: string;
+    userId?: string; // Added userId
 }
 
 export async function signup(user: User): Promise<AuthResponse> {
@@ -27,10 +28,7 @@ export async function signup(user: User): Promise<AuthResponse> {
 export async function login(email: string, password: string): Promise<AuthResponse> {
     try {
         const response = await axios.post<AuthResponse>(`${API_URL}/login`, { email, password });
-        if (response.data.success && response.data.token) {
-            localStorage.setItem('authToken', response.data.token);
-        }
-        return response.data;
+        return response.data; // Return the entire response data
     } catch (error) {
         console.error('Login error:', error);
         return { success: false, message: 'An error occurred during login' };

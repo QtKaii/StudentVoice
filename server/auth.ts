@@ -72,7 +72,7 @@ export async function signup(user: Omit<User, 'id'>): Promise<{ success: boolean
             password: hashedPassword,
         });
 
-        return { success: true, message: 'User created successfully' };
+        return { success: true, message: 'User created successfully. Please login to continue.' };
     } catch (error) {
         if (error instanceof z.ZodError) {
             return { success: false, message: 'Invalid input: ' + error.errors.map(e => e.message).join(', ') };
@@ -82,7 +82,7 @@ export async function signup(user: Omit<User, 'id'>): Promise<{ success: boolean
     }
 }
 
-export async function login(email: string, password: string): Promise<{ success: boolean; message: string; token?: string }> {
+export async function login(email: string, password: string): Promise<{ success: boolean; message: string; token?: string; userId?: string }> {
     try {
         const users = await db.query<[[User]]>(
             "SELECT * FROM user WHERE email = $email",
@@ -96,7 +96,7 @@ export async function login(email: string, password: string): Promise<{ success:
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (isValidPassword && user.id) {
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
-            return { success: true, message: 'Login successful', token };
+            return { success: true, message: 'You have successfully logged in!', token, userId: user.id }; // Include userId
         } else {
             return { success: false, message: 'Invalid credentials' };
         }
