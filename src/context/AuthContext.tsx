@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { getCurrentUser } from '../api/auth';
+import { getCurrentUser, login as apiLogin } from '../api/auth';
 
 interface User {
   userId: string;
@@ -9,9 +9,10 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (token: string) => void;
-  logout: () => void;
+  login: (token: string, user: User) => Promise<void>;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,15 +20,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const checkAuth = async () => {
-    const result = await getCurrentUser();
-    if (result.authenticated) {
-      setIsAuthenticated(true);
-      setUser({ userId: result.userId! });
-    } else {
+    setIsLoading(true);
+    try {
+      const result = await getCurrentUser();
+      console.log('checkAuth result:', result);
+      if (result.authenticated) {
+        setIsAuthenticated(true);
+        setUser({ userId: result.userId! });
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Error checking authentication:', error);
       setIsAuthenticated(false);
       setUser(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -35,19 +47,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, []);
 
-  const login = (token: string) => {
-    localStorage.setItem('authToken', token);
-    checkAuth();
+  const login = async (token: string, user: User) => {
+    setIsLoading(true);
+    try {
+      await localStorage.setItem('authToken', token);
+      setIsAuthenticated(true);
+      setUser(user);
+      console.log('login successful:', user);
+    } catch (error) {
+      console.error('Error during login:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    setIsAuthenticated(false);
-    setUser(null);
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await localStorage.removeItem('authToken');
+      setIsAuthenticated(false);
+      setUser(null);
+      console.log('logout successful');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, checkAuth, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
