@@ -26,7 +26,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const result = await getCurrentUser();
-      console.log('checkAuth result:', result);
       if (result.authenticated) {
         setIsAuthenticated(true);
         setUser({ userId: result.userId! });

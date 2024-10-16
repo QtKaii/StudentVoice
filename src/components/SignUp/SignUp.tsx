@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { signup } from '../../api/auth';
+import { useAuth } from '../../context/AuthContext';
 
 const SignUp: React.FC = () => {
   const { darkMode } = useTheme();
@@ -16,6 +17,14 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const {isLoading, isAuthenticated} = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isLoading]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

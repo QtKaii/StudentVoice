@@ -78,7 +78,7 @@ export async function fetchUserData(): Promise<any> {
         // response is like: { success: true, user: userData }
         // extract the user data
 
-        const userData = response.data.user;
+        const userData  = response.data.user;
 
         return userData;
     } catch (error) {

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { login as apiLogin } from '../../api/auth';
+import { use } from 'framer-motion/client';
 
 const Login: React.FC = () => {
   const { darkMode } = useTheme();
-  const { login: authLogin, checkAuth, isLoading: authLoading } = useAuth();
+  const { login: authLogin, isLoading: authLoading, isAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,12 +18,21 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [authLoading]);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setIsLoading(true);
     console.log("Login attempt - Email:", email);
+
+    // console log all auth state for debugging
 
     try {
       const result = await apiLogin(email, password);
@@ -32,10 +42,6 @@ const Login: React.FC = () => {
         setSuccess(result.message);
         await authLogin(result.token, { userId: result.userId });
         console.log("Auth login called with token and userId");
-        
-        // Check auth state after login
-        await checkAuth();
-        console.log("Auth state checked after login");
         
         navigate('/dashboard');
         console.log("Navigating to dashboard");
