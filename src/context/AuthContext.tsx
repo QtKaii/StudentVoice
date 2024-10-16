@@ -1,9 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { getCurrentUser, login as apiLogin } from '../api/auth';
 
-interface User {
+type User {
   userId: string;
-  // Add other user properties as needed
+  username: string;
+  email: string;
+  isFirstLogin: boolean;
+  institutionId?: string;
+  courseId?: string;
+  year?: string;
 }
 
 interface AuthContextType {
@@ -26,9 +31,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const result = await getCurrentUser();
-      if (result.authenticated) {
+      if (result) {
         setIsAuthenticated(true);
-        setUser({ userId: result.userId! });
+        setUser(result);
       } else {
         setIsAuthenticated(false);
         setUser(null);

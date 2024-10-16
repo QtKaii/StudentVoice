@@ -1,70 +1,81 @@
+/* Import fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
+
+/* Tailwind directives */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base styles */
+
 body {
-  @apply font-sans text-gray-800 antialiased;
-  cursor: none;
+    @apply font-sans text-gray-800 antialiased;
 }
 
-* {
-  cursor: none !important;
-}
+
+/* Typography */
 
 @layer base {
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-bold;
-  }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-display font-bold;
+    }
 }
+
+
+/* Component styles */
 
 @layer components {
-  .btn-primary {
-    @apply px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 font-semibold;
-  }
-  .btn-secondary {
-    @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition duration-300 font-semibold;
-  }
+    .btn-primary {
+        @apply px-4 py-2 bg-blue-600 text-white rounded-md hover: bg-blue-700 transition duration-300 font-semibold;
+    }
+    .btn-secondary {
+        @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover: bg-gray-300 transition duration-300 font-semibold;
+    }
 }
+
+
+/* Utility classes */
 
 @layer utilities {
-  .text-shadow {
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  }
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
 }
+
 
 /* Custom Cursor Styles */
+
 .custom-cursor {
-  pointer-events: none;
-  position: fixed;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid rgb(59, 130, 246);
-  transition: width 0.15s, height 0.15s, transform 0.1s;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
+    pointer-events: none;
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid rgb(59, 130, 246);
+    transition: width 0.15s, height 0.15s, transform 0.1s;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
 }
 
-a:hover,
-button:hover,
-input:hover,
-select:hover,
-textarea:hover,
-.hoverable:hover {
-  cursor: none;
-}
 
-a:hover ~ .custom-cursor,
-button:hover ~ .custom-cursor,
-input:hover ~ .custom-cursor,
-select:hover ~ .custom-cursor,
-textarea:hover ~ .custom-cursor,
-.hoverable:hover ~ .custom-cursor {
-  width: 54px;
-  height: 54px;
-  background-color: transparent;
-  border: 2px solid rgba(59, 130, 246, 0.5);
+/* Hover effects for custom cursor */
+
+a:hover~.custom-cursor,
+button:hover~.custom-cursor,
+input:hover~.custom-cursor,
+select:hover~.custom-cursor,
+textarea:hover~.custom-cursor,
+.hoverable:hover~.custom-cursor {
+    width: 54px;
+    height: 54px;
+    background-color: transparent;
+    border: 2px solid rgba(59, 130, 246, 0.5);
 }

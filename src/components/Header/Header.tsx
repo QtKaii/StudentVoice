@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <motion.header 
-      className={`fixed w-full z-50 transition-all duration-300 ease-in-out ${darkMode ? 'dark:bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+      className={`fixed w-full z-50 ${darkMode ? 'dark:bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
       initial={false}
       animate={controls}
     >

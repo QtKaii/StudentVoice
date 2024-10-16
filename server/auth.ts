@@ -40,6 +40,10 @@ type User = {
     username: string;
     email: string;
     password: string;
+    isFirstLogin: boolean;
+    insitutionId?: string;
+    courseId?: string;
+    year?: string;
 }
 
 const userSchema = z.object({
@@ -70,6 +74,7 @@ export async function signup(user: Omit<User, 'id'>): Promise<{ success: boolean
             username: validatedUser.username,
             email: validatedUser.email,
             password: hashedPassword,
+            isFirstLogin: true
         });
 
         return { success: true, message: 'User created successfully. Please login to continue.' };
@@ -123,6 +128,10 @@ type CleanedUserDataType = {
             id: string;
             username: string;
             email: string;
+            isFirstLogin: boolean;
+            institutionId?: string;
+            courseId?: string;
+            year?: string;
         };
 
 
@@ -137,6 +146,9 @@ export async function getUserData(userId: string): Promise<CleanedUserDataType |
                 id: user.id,
                 username: user.username,
                 email: user.email,
+                isFirstLogin: user.isFirstLogin,
+                institutionId: user.insitutionId,
+                courseId: user.courseId,
             };
 
             return cleanedUserData;

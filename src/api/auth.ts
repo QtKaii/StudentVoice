@@ -1,11 +1,15 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-interface User {
+type User = {
+    userId: string;
     username: string;
     email: string;
-    password: string;
+    isFirstLogin: boolean;
+    institutionId?: string;
+    courseId?: string;
+    year?: string;
 }
 
 interface AuthResponse {
@@ -43,21 +47,25 @@ export function getAuthToken(): string | null {
     return localStorage.getItem('authToken');
 }
 
-export async function getCurrentUser(): Promise<{ authenticated: boolean; userId?: string }> {
+export async function getCurrentUser(): Promise<User | null> { 
     const token = getAuthToken();
     if (!token) {
-        return { authenticated: false };
+        return null;
     }
 
     try {
-        const response = await axios.get(`${API_URL}/verify-token`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        return { authenticated: true, userId: response.data.userId };
+        const instanceAxios = createAuthenticatedAxiosInstance();
+        const response = await instanceAxios.get<{ authenticated: boolean; userId?: string }>('/verify-token');
+        if (response.data.authenticated) {
+            const user = await instanceAxios.get<User>('/user-data')
+            return user.data;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.error('Token verification error:', error);
         logout(); // Clear invalid token
-        return { authenticated: false };
+        return null;
     }
 }
 
@@ -69,20 +77,4 @@ export function createAuthenticatedAxiosInstance() {
             Authorization: `Bearer ${token}`
         }
     });
-}
-
-export async function fetchUserData(): Promise<any> {
-    try {
-        const axiosInstance = createAuthenticatedAxiosInstance();
-        const response = await axiosInstance.get('/user-data');
-        // response is like: { success: true, user: userData }
-        // extract the user data
-
-        const userData  = response.data.user;
-
-        return userData;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;
-    }
 }
