@@ -1,5 +1,5 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom'
 import Header from './components/Header/Header'
 import Hero from './components/Hero/Hero'
 import Features from './components/Features/Features'
@@ -11,12 +11,26 @@ import Login from './components/Login/Login'
 import Logout from './components/Logout/Logout'
 import ProtectedRoute from './components/ProtectedRoute'
 import { ThemeProvider } from './context/ThemeContext'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { useTheme } from './context/ThemeContext'
 import Dashboard from './components/Dashboard/Dashboard'
 
 function AppContent() {
   const { darkMode } = useTheme();
+
+
+  function HomeChecker() {
+    const navigate = useNavigate();
+    const { isLoading, isAuthenticated } = useAuth();
+
+    useEffect(() => {
+      if (isAuthenticated) {
+        navigate('/dashboard');
+      }
+    }, [isLoading]);
+
+    return null;  
+  }
 
   return (
     <Router>
@@ -26,6 +40,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={
               <>
+                <HomeChecker/>
                 <Hero />
                 <Features />
                 <HowItWorks />

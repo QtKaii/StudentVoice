@@ -8,9 +8,12 @@
         "dev:frontend": "vite",
         "dev:backend": "cd server && npm run build && npm run start",
         "build": "vite build && cd server && npm run build",
-        "start": "cd server && npm run start",
+        "build:frontend": "vite build",
+        "build:backend": "cd server && npm run build",
+        "start:backend": "cd server && npm run start",
+        "start:frontend": "vite build && vite preview --port 3000 --host 0.0.0.0",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview --port 3000 --host 0.0.0.0"
     },
     "dependencies": {
         "@mapbox/node-pre-gyp": "^1.0.11",
