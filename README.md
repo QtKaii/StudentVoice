@@ -43,7 +43,7 @@ This will start both the frontend and backend in development mode.
 
 This command will build the application image and start both the application and SurrealDB containers.
 
-3. The application will be available at `http://localhost:3001`
+3. The application will be available at `http://127.0.0.1:3001`
 
 To stop the containers, use:
 ```

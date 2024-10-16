@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface UserData {
+type UserData = {
+  id: string;
   username: string;
   email: string;
-  // Add other fields as necessary
-}
+};
 
 interface UserProfileProps {
   userData: UserData;

@@ -19,7 +19,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy backend
-COPY --from=backend-build /app/server/dist ./
+COPY --from=backend-build /app/server/dist ./dist
 COPY --from=backend-build /app/server/package*.json ./
 
 # Copy frontend build
@@ -32,4 +32,4 @@ RUN npm install --only=production
 EXPOSE 3001
 
 # Start the server
-CMD ["node", "index.js"]
+CMD ["node", "dist/index.js"]

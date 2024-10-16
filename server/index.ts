@@ -18,8 +18,7 @@ if (!process.env.JWT_SECRET_KEY) {
 const app = express();
 app.use(express.json());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../public')));
+
 
 // Extend the Express Request type to include the user property
 declare global {
@@ -36,23 +35,19 @@ declare global {
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    console.log("Authenticating token:", token); // Added debug log
 
     if (token == null) {
-        console.log("No token provided"); // Added debug log
         res.sendStatus(401);
         return;
     }
 
     const user = verifyToken(token);
     if (user == null) {
-        console.log("Invalid token"); // Added debug log
         res.sendStatus(403);
         return;
     }
 
     req.user = user;
-    console.log("Authentication successful:", user); // Added debug log
     next();
 };
 
@@ -101,16 +96,6 @@ app.get('/api/user-data', authenticateToken, async (req: Request, res: Response)
         console.error('Error fetching user data:', error);
         res.status(500).json({ success: false, message: 'An error occurred while fetching user data' });
     }
-});
-
-// Serve index.html only for GET requests to the root path.  This should be AFTER the API routes.
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
-
-//This should be last
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 const port = process.env.PORT || 3001;

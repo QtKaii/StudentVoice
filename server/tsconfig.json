@@ -6,15 +6,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "outDir": "./dist",
-    "rootDir": "./",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "outDir": "./dist/",
     "types": ["node"]
   },
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules"]
 }

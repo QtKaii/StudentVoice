@@ -1,4 +1,4 @@
-import { Surreal } from "surrealdb";
+import { StringRecordId, Surreal } from "surrealdb";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { z } from "zod";
@@ -7,7 +7,7 @@ const db = new Surreal();
 
 // Initialize the database connection with retry mechanism and detailed logging
 export async function initDB(maxRetries = 5, retryDelay = 5000) {
-    const surrealDbUrl = process.env.SURREALDB_URL || "ws://localhost:8000/rpc";
+    const surrealDbUrl = process.env.SURREALDB_URL || "ws://127.0.0.1:8000/rpc";
     console.log(`Attempting to connect to SurrealDB at ${surrealDbUrl}`);
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -35,8 +35,8 @@ export async function initDB(maxRetries = 5, retryDelay = 5000) {
     }
 }
 
-interface User {
-    id?: string;
+type User = {
+    id: string;
     username: string;
     email: string;
     password: string;
@@ -119,15 +119,29 @@ export function verifyToken(token: string): { userId: string } | null {
     }
 }
 
-export async function getUserData(userId: string): Promise<User | null> {
+type CleanedUserDataType = {
+            id: string;
+            username: string;
+            email: string;
+        };
+
+
+export async function getUserData(userId: string): Promise<CleanedUserDataType | null> {
     try {
-        const users = await db.query<[[User]]>(
-            "SELECT id, username, email FROM user WHERE id = $userId",
-            { userId }
-        );
-        if (users[0].length === 1) {
-            return users[0][0];
+        const user = await db.select<User>(new StringRecordId(userId));
+
+        if (user) {
+            // Clean the user data
+            // remove any other fields other than that described in the type
+            const cleanedUserData: CleanedUserDataType = {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+            };
+
+            return cleanedUserData;
         }
+
         return null;
     } catch (error) {
         console.error('Error fetching user data:', error);

@@ -6,10 +6,10 @@ import UserProfile from './UserProfile';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 
-interface UserData {
+type UserData = {
+  id: string;
   username: string;
   email: string;
-  // Add other fields as necessary
 }
 
 const Dashboard: React.FC = () => {
@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/signin');
   };
 
   if (loading) {

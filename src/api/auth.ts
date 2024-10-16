@@ -75,7 +75,12 @@ export async function fetchUserData(): Promise<any> {
     try {
         const axiosInstance = createAuthenticatedAxiosInstance();
         const response = await axiosInstance.get('/user-data');
-        return response.data;
+        // response is like: { success: true, user: userData }
+        // extract the user data
+
+        const userData = response.data.user;
+
+        return userData;
     } catch (error) {
         console.error('Error fetching user data:', error);
         throw error;

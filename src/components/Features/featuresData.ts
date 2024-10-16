@@ -1,4 +1,4 @@
-import { MessageSquare, Vote, FileText, Users } from 'lucide-react'
+import { MessageSquare, Vote, FileText, Users, LucideIcon } from 'lucide-react'
 
 export interface Feature {
   name: string;
